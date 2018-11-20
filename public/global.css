@@ -1,0 +1,44 @@
+.simple-banner {
+    border-bottom: 2px solid #DEDEDE;
+	width:100%;
+	position: fixed;
+    z-index: 2000;
+	background: #d70021;
+}
+.simple-banner-inner{
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 5px 0 5px 0;
+}
+
+.regular-text{
+    font-family: arial;	   
+    font-weight: bold;
+    font-size: 11pt;
+	line-height:20px;
+	color: #fff;
+}
+
+.yellow-text{
+	    font-family: arial;   
+    font-weight: bold;
+    font-size: 11pt;
+	line-height:20px;
+	color: #ffc512;
+}
+#hb-traffic-cta{   
+    font-family: arial;
+    font-weight: bolder;
+    font-size: 10pt;
+    text-transform: none;
+    padding: 2px 5px 2px 5px;
+    text-decoration: none;
+    margin-left: 15px;
+
+	background:  #fff;
+	color: #d70021;
+}
+.leaflet-control-zoom a:link {
+	text-decoration: unset;
+}

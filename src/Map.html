@@ -1,0 +1,306 @@
+<div class="map"></div>
+<div class="header">
+  <div class="title">
+	<input class="zipcode" type="text" placeholder="Enter your City or Zip Code" size="25">
+	<input type="submit" value="SUBMIT" class="sButton">
+  </div>
+  <div class="mode-controls">
+	<a href="#STORE" class="menu STORE" on:click="set({filter: 'STORE'})">STORES</a>
+	<a href="#DRINK" class="menu DRINK" on:click="set({filter: 'DRINK'})">BARS</a>
+	<a href="#ALL" class="menu current ALL" on:click="set({filter: ''})">ALL</a>  
+	<a href="#ALL" class="menu closetome" on:click="closeToMe()">CloseToMe</a>  
+  </div>
+</div>
+<div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span></div>
+<div class="viewItems"></div>
+
+<style>
+.map {
+    position: relative;
+    height: 484px;
+}
+.title {
+	float: left;
+}
+.mode-controls {
+	float: right;
+}
+.header, .viewItemsCountCont, .viewItems {
+    padding: 10px;
+	clear: both;
+}
+.mode-controls a {
+	float: left;
+    font-family: TradeGothicLTStdBoldCondensed;
+    /* text-rendering: optimizeLegibility;
+    text-transform: uppercase; */
+    text-decoration: unset;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    /* display: inline-block; */
+    /* margin: 4px; */
+    padding: 4px;
+    /* width: 60px; */
+    /* height: 31px; */
+    background-color: #f0f0f0;
+    /* line-height: 33px; */
+}
+.mode-controls .current {
+    position: relative;
+    background-color: #ed9605;
+    color: black;
+}
+@media only screen and (max-width: 480px) {
+	.mode-controls {
+		padding-top: 6px;
+	}
+}
+.mode-controls a.current:after {
+    position: absolute;
+    display: block;
+    content: "";
+    border-color: #ed9605 transparent transparent transparent;
+    border-style: solid;
+    border-width: 5px;
+    height: 0;
+    width: 0;
+    position: absolute;
+    bottom: -10px;
+    left: 37%;
+}
+.title input {
+    font-size: 16px;
+	padding: 4px;
+}
+.title input.sButton {
+    background-color: #ed9605;
+    border: 0;
+    font-family: TradeGothicLTStdBoldCondensed;
+    font-weight: bold;
+    text-rendering: optimizeLegibility;
+    text-transform: uppercase;
+    text-align: center;
+    color: black;
+    height: 31px;
+    cursor: pointer;
+}
+</style>
+
+<script>
+	// import TreeView from './TreeView.html';
+
+	// import SidebarControl from  'scanex-leaflet-sidebar';
+	// import 'scanex-leaflet-sidebar/dist/scanex-leaflet-sidebar.css';
+
+	// import IconLayers from 'leaflet-iconlayers';
+	// import 'leaflet-iconlayers/dist/iconLayers.css';
+	
+	// import './iconLayersDark.css';
+
+	const serverBase = window.serverBase || '//maps.kosmosnimki.ru/';
+var utils = {
+	buttons: ['zipcode', 'sButton', 'searchBARS', 'searchALL', 'searchSTORE', 'closetome'],
+	getButtonType: function(button) {
+		for (var i = 0, len = utils.buttons.length; i < len; i++) {
+			var type = utils.buttons[i];
+			if ( L.DomUtil.hasClass(button, type)) {
+				return type;
+			}
+		}
+		return null;
+	},
+	setCurrentType: function(type) {
+		for (var i = 2, len = utils.buttons.length; i < len; i++) {
+			var name = utils.buttons[i];
+				fname = type === name ? 'addClass' : 'removeClass';
+			L.DomUtil[fname](document.getElementsByClassName(name)[0], 'current');
+		}
+	},
+	locationfound: function(ev) {
+			console.log('locationfound', ev);
+	},
+	setFilter: function(ev) {
+		var button = ev ? ev.target : null,
+			type = button && button.className ? utils.getButtonType(button) : 'searchALL',
+			count = 0,
+			flayers = utils.geoJsonLayer.getLayers(),
+			bbox = map.getBounds();
+
+		if (type === 'sButton') {
+			var val = document.getElementsByClassName('zipcode')[0].value,
+				fname = val.match(/[^\d]/) ? 'Address' : 'Zipcode';
+			for (var i = 0, len = flayers.length; i < len; i++) {
+				var it = flayers[i],
+					pv = String(it.feature.properties[fname]);
+				if (pv.indexOf(val) !== -1) {
+					map.setView(it.getLatLng(), 17);
+					it.openPopup();
+					return;
+				}
+			}
+		} else if (type === 'closetome') {
+			map.locate({setView: true});
+		} else if (type.indexOf('search') !== -1) {
+			utils.setCurrentType(type);
+			flayers.forEach(function(it) {
+				var feature = it.feature,
+					props = feature.properties,
+					node = feature.dom,
+					flag = bbox.contains(it.getLatLng());
+
+				if (type === 'searchBARS') {
+					if (props.Category !== 'DRINK') { flag = false; }
+				} else if (type === 'searchSTORE') {
+					if (props.Category !== 'STORE') { flag = false; }
+				}
+				if (flag) {
+					count++;
+					L.DomUtil.removeClass(node, 'gmx-hidden');
+				} else {
+					L.DomUtil.addClass(node, 'gmx-hidden');
+				}
+			});
+			viewItemsCount.innerHTML = count;
+		}
+		// console.log(type)
+	},
+	getFeatureCollection: function(json) {
+		// var columns = json.columns;
+		return {
+			"type": "FeatureCollection", 
+			"features": json.map(function(it, i) {
+				var node = L.DomUtil.create('div', 'point-detail vcard');
+				node.innerHTML = '<div class="icon"><div class="name fn org overflow-controlled" title="' + it.Name + '"><a href="' + it.Website + '" target="none">' + it.Name + '</a></div><div class="caption">' + it.Description + '</div></div><div class="metadata"><strong><div class="address adr overflow-controlled" title="' + it.Address + '">' + it.Address + '</div><div class="phone tel overflow-controlled">(202) 543-9300</div><div class="url overflow-controlled"><a href="' + it.Website + '" target="_blank">Website</a></div></strong></div>';
+				// viewItems.appendChild(node);
+				return {
+						"type": "Feature", "id": i + 1,
+						"dom": node,
+						"properties": it,
+						"geometry": { "type": "Point", "coordinates": [it.Lng, it.Lat ] }
+				}
+			})
+		};
+	}
+};
+
+	export default {
+		data() {
+			return {
+				layersTree: {
+					visible: {},
+					expanded: {}
+				},
+				filter: ''
+			}
+		},
+		methods: {
+			createMap(it) {
+				let {layersTree} = this.get();
+					it = it || {};
+				let app = it.app || {},
+					gmxMap = app.gmxMap || {},
+					state = it.state || {},
+					// layersTree = state.layersTree || {},
+					calendar = state.calendar || {},
+					mapID = gmxMap.mapID || '946GH',
+					apiKey = gmxMap.apiKey,
+					pos = state.map ? state.map.position : {};
+
+				// console.log('createMap', it)
+				fetch('data/sia6.json').then(function(response) {
+						return response.json();
+					}).then(function(json) {
+						if(app.theme) {
+							document.body.classList.add(app.theme);
+						}
+						if(L.leafletMap) {
+							L.leafletMap.remove();
+						}
+
+						layersTree = state.layersTree || layersTree;
+						this.layersTree = layersTree;
+
+						let featureCollection = utils.getFeatureCollection(json),
+							markers = L.markerClusterGroup({
+								showCoverageOnHover: false,
+								disableClusteringAtZoom: 16
+							});
+
+						let geoJsonLayer = utils.geoJsonLayer = L.geoJson(featureCollection, {
+							onEachFeature: function (feature, layer) {
+								let props = feature.properties,
+									img = props.Image ? '<img src="' + props.Image + '" />' : '',
+									html = img +
+										'<br><strong>' + props.Name + '</strong>\
+										<br>' + props.Address + '\
+										<br>' + props['Phone Number'] + '\
+										<a href="' + props.Website + '">WEBSITE</a>';
+								layer.bindPopup(html);
+							}
+						});
+
+						let node = document.getElementsByClassName('map')[0];
+						let map = L.leafletMap = new L.Map(node, {
+							srs: 3857,
+							layers: [L.tileLayer('https://tilessputnik.ru/{z}/{x}/{y}.png', {
+								maxZoom: 17,
+								attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+							})],
+							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
+							zoom: pos.z || 4
+						}).on('moveend', this.setFilter.bind(this));
+						// L.leafletMap = map;
+
+						markers.addLayer(geoJsonLayer);
+						document.getElementsByClassName('viewItemsCount')[0].innerHTML = featureCollection.features.length;
+
+						map.addLayer(markers);
+						this.markers = markers;
+						this.setFilter();
+						
+					}.bind(this));
+			},
+			closeToMe() {
+				L.leafletMap.locate({setView: true});
+			},
+			setFilter() {
+				if (utils.geoJsonLayer) {
+					let {filter} = this.get();
+					let flayers = utils.geoJsonLayer.getLayers(),
+						bbox = L.leafletMap.getBounds(),
+						layers = [];
+					flayers.forEach(function(it) {
+						var feature = it.feature,
+							props = feature.properties,
+							// node = feature.dom,
+							flag = bbox.contains(it.getLatLng());
+
+						if (filter && props.Category !== filter) { flag = false; }
+						if (flag) {
+							layers.push(it);
+						}
+					});
+					document.getElementsByClassName('viewItemsCount')[0].innerHTML = layers.length;
+					this.markers.clearLayers();
+					this.markers.addLayers(layers);
+					let node = document.getElementsByClassName('mode-controls')[0];
+					node.getElementsByClassName('STORE')[0].classList[filter === 'STORE' ? 'add' : 'remove']('current');
+					node.getElementsByClassName('DRINK')[0].classList[filter === 'DRINK' ? 'add' : 'remove']('current');
+					node.getElementsByClassName('ALL')[0].classList[filter === '' ? 'add' : 'remove']('current');
+				}
+			}
+		},
+		
+		onstate({ changed, current, previous }) {
+			console.log('map onstate', changed, current, previous);
+			if (changed.menu && current.menu === 'retailers') {
+				this.createMap(current.permalink);
+			}
+			if (changed.filter) {
+				this.setFilter(current.filter);
+			}
+			
+		}
+	}
+</script>

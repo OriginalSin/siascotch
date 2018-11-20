@@ -1,0 +1,120 @@
+/************************************************************
+ * Push Sidebar Menu
+ * 
+ * Created on: March 3,2015
+ * License   : MIT
+ * Author    : Amr Mekkawy <amr.mekkawy@gmail.com>
+ * URL       : http://github.com/AmrMekkawy/push-sidebar-menu
+ ************************************************************/
+
+.nav_trigger {
+	cursor: pointer;
+	display: inline-block;
+	font-size: 26px;
+	margin:27px 20px 0 50px;
+  float:right;
+}
+body.show_sidebar .nav_trigger {
+	margin-right: 5px;
+}
+.push_sidebar {
+	
+	background: #2b2b2b;
+    border-left: 0px solid #ddd;
+    bottom: 0;
+    color: #95A7B7;
+    left: 100%;
+    overflow: auto;
+    position: fixed;
+    top: 0px;
+    width: 250px;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    -ms-transition: all .5s ease;
+    -o-transition: all .5s ease;
+    transition: all .5s ease;
+    z-index: 99999;
+
+}
+body.show_sidebar .push_sidebar {
+	left: 40%;
+}
+#wrapper {
+	-webkit-transition: all .5s ease;
+	   -moz-transition: all .5s ease;
+	    -ms-transition: all .5s ease;
+	     -o-transition: all .5s ease;
+	        transition: all .5s ease;
+}
+body.show_sidebar #wrapper {
+	
+}
+
+
+
+
+/***********************************/
+.push_sidebar ul{
+    margin-top: 55px;
+	    margin-left: 12px;
+}
+.push_sidebar li {
+list-style:none;	
+}
+.push_sidebar li a {
+	padding: 10px 15px 10px 5px;
+	display: block;	
+	background: #2b2b2b;
+	color: #fff;
+	text-decoration: none;
+	text-transform:uppercase;
+	    font-family: 'HelveticaNeue-CondensedBold';
+    font-size: 17px;
+}
+.push_sidebar li a:hover {
+	background-color: #272c30;
+	color:#FFC512;
+}
+.push_sidebar li a .fa {
+	font-size: 19px;
+	float: right;
+	width: 30px;
+	text-align: center;
+	margin-left: 5px;
+}
+.push_sidebar li.hr-line{
+	line-height:5px;
+}
+.push_sidebar li.hr-line
+hr {
+    background-color: #616161;
+    border: 0;
+    clear: both;
+    height: 1px;
+    margin-bottom: 10px;
+}
+
+
+.push_sidebar .nav_trigger .fa.fa-times{
+	    padding-right:55px;
+    margin-top: 0px;
+}
+
+
+.push_sidebar .nav_trigger
+.fa.fa-navicon:before {
+    content: "\f0c9";
+}
+
+/*
+.fa-remove, .fa-close, .fa-times{
+background:url(images/nav-close.png);	
+background-repeat:no-repeat;
+width:20px;
+height:20px;
+text-indent: -9999px;
+}
+*/
+.mobile-menu .nav_trigger .fa.fa-times{
+display:none;	
+}
