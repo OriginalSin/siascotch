@@ -206,8 +206,8 @@ var utils = {
 					mapID = gmxMap.mapID || '946GH',
 					apiKey = gmxMap.apiKey,
 					pos = state.map ? state.map.position : {},
-					siaJSON = './data/sia6.json';
-					// siaJSON = (location.pathname.indexOf('/public/') === -1 ? '../' : '') + 'data/sia6.json';
+					// siaJSON = './data/sia6.json';
+					siaJSON = (location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
 
 				// console.log('createMap', it)
 				
