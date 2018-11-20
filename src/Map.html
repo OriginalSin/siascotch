@@ -25,6 +25,9 @@
 .mode-controls {
 	float: right;
 }
+.header, .viewItemsCountCont, .viewItems, .map, #site-info-text {
+	max-width: 932px;
+}
 .header, .viewItemsCountCont, .viewItems {
     padding: 10px;
 	clear: both;
@@ -206,8 +209,7 @@ var utils = {
 					mapID = gmxMap.mapID || '946GH',
 					apiKey = gmxMap.apiKey,
 					pos = state.map ? state.map.position : {},
-					// siaJSON = './data/sia6.json';
-					siaJSON = (location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
+					siaJSON = (location.hostname !== '127.0.0.1' && location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
 
 				// console.log('createMap', it)
 				
