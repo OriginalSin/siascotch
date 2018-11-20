@@ -205,10 +205,12 @@ var utils = {
 					calendar = state.calendar || {},
 					mapID = gmxMap.mapID || '946GH',
 					apiKey = gmxMap.apiKey,
-					pos = state.map ? state.map.position : {};
+					pos = state.map ? state.map.position : {},
+					siaJSON = (location.pathname.indexOf('/public/') === -1 ? '../' : '') + 'data/sia6.json';
 
 				// console.log('createMap', it)
-				fetch('data/sia6.json').then(function(response) {
+				
+				fetch(siaJSON).then(function(response) {
 						return response.json();
 					}).then(function(json) {
 						if(app.theme) {
