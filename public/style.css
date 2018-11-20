@@ -198,16 +198,16 @@ Text Domain: twentyten
 
 @font-face {
 	font-family: 'Avenir-Light';
-	src: url('http://siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.eot?') format('eot'), 
-	     url('http://siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.woff') format('woff'), 
-	     url('http://siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.ttf')  format('truetype'),
-	     url('http://siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.svg#Avenir-Light') format('svg');
+	src: url('//siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.eot?') format('eot'), 
+	     url('//siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.woff') format('woff'), 
+	     url('//siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.ttf')  format('truetype'),
+	     url('//siascotch.com/wp-content/themes/twentyten/images/Avenir-Light.svg#Avenir-Light') format('svg');
 }
 
 
 @font-face {
     font-family: "Helvetica Neue";
-    src: url('http://siascotch.com/wp-content/uploads/fonts/Helvetica-Condensed.otf');             
+    src: url('//siascotch.com/wp-content/uploads/fonts/Helvetica-Condensed.otf');             
     font-weight: bold;
     font-style: normal;
 
@@ -223,7 +223,7 @@ Text Domain: twentyten
 
 @font-face {
   	font-family: Avenir;
-    src: url('http://siascotch.com/wp-content/uploads/fonts/Avenir_35_Light.ttf') format('truetype');         
+    src: url('//siascotch.com/wp-content/uploads/fonts/Avenir_35_Light.ttf') format('truetype');         
     font-weight: bold;
     font-style: normal;
 
@@ -2204,7 +2204,7 @@ text-decoration: none !important;
 
 #searchsubmit{
 border:0px;
-background:url(http://siascotch.com/wp-content/uploads/2013/06/s_button.png);
+background:url(//siascotch.com/wp-content/uploads/2013/06/s_button.png);
 background-repeat:no-repeat;
 width:63px;
 height:26px;
@@ -3095,7 +3095,7 @@ margin-left: -2px !important;
 
 }
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:800);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:800);
 
 /***/
 /********************************/
