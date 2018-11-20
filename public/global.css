@@ -42,3 +42,8 @@
 .leaflet-control-zoom a:link {
 	text-decoration: unset;
 }
+.leaflet-marker-pane > img {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 25px;
+}

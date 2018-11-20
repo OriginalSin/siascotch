@@ -18,6 +18,7 @@
 .map {
     position: relative;
     height: 484px;
+	margin: 0 auto;
 }
 .title {
 	float: left;
@@ -31,6 +32,7 @@
 .header, .viewItemsCountCont, .viewItems {
     padding: 10px;
 	clear: both;
+    margin: 0 auto;
 }
 .mode-controls a {
 	float: left;
@@ -102,6 +104,20 @@
 	// import './iconLayersDark.css';
 
 	const serverBase = window.serverBase || '//maps.kosmosnimki.ru/';
+
+	L.Icon.Default.imagePath = './';
+	var iconUrl = 'sia.jpg',
+		icon = new L.Icon.Default({
+			iconUrl: iconUrl,
+			iconRetinaUrl: iconUrl,
+			iconSize: [50, 50],
+			iconAnchor: [7, 37],
+			popupAnchor: [3, -25],
+			shadowUrl: iconUrl,
+			shadowSize: [0, 0],
+			shadowAnchor: [0, 0]
+		});
+
 var utils = {
 	buttons: ['zipcode', 'sButton', 'searchBARS', 'searchALL', 'searchSTORE', 'closetome'],
 	getButtonType: function(button) {
@@ -226,6 +242,18 @@ var utils = {
 						layersTree = state.layersTree || layersTree;
 						this.layersTree = layersTree;
 
+						let node = document.getElementsByClassName('map')[0];
+						let map = L.leafletMap = new L.Map(node, {
+							srs: 3857,
+							layers: [L.tileLayer('https://tilessputnik.ru/{z}/{x}/{y}.png', {
+								maxZoom: 17,
+								attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+							})],
+							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
+							zoom: pos.z || 4
+						});//.on('moveend', this.setFilter.bind(this));
+						// L.leafletMap = map;
+
 						let featureCollection = utils.getFeatureCollection(json),
 							markers = L.markerClusterGroup({
 								showCoverageOnHover: false,
@@ -233,6 +261,9 @@ var utils = {
 							});
 
 						let geoJsonLayer = utils.geoJsonLayer = L.geoJson(featureCollection, {
+							pointToLayer: function (geoJsonPoint, latlng) {
+								return L.marker(latlng, { icon: icon });
+							},
 							onEachFeature: function (feature, layer) {
 								let props = feature.properties,
 									img = props.Image ? '<img src="' + props.Image + '" />' : '',
@@ -244,18 +275,6 @@ var utils = {
 								layer.bindPopup(html);
 							}
 						});
-
-						let node = document.getElementsByClassName('map')[0];
-						let map = L.leafletMap = new L.Map(node, {
-							srs: 3857,
-							layers: [L.tileLayer('https://tilessputnik.ru/{z}/{x}/{y}.png', {
-								maxZoom: 17,
-								attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-							})],
-							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
-							zoom: pos.z || 4
-						}).on('moveend', this.setFilter.bind(this));
-						// L.leafletMap = map;
 
 						markers.addLayer(geoJsonLayer);
 						document.getElementsByClassName('viewItemsCount')[0].innerHTML = featureCollection.features.length;
