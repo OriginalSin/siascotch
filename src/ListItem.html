@@ -1,0 +1,81 @@
+<div class="listItem">
+	<div class="icon" style="background-image: url(http://siascotch.com/wp-content/plugins/map-plugin/markers.png); background-position: 0px -620px;"></div>
+	<div class="descr">
+		<div class="name" title="Wingtip - Club"><a href="http://www.wingtip.com/club" target="none">Wingtip - Club</a></div>
+		<div class="caption">An urban refuge for loyal customers of Wingtip, located in the heart of San Francisco's Financial District. Enjoy a glass of SIA at The Club at Wingtip with friends.</div>
+	</div>
+	<div class="metadata">
+		<div class="address" title="550 Montgomery St<br />San Francisco, CA">550 Montgomery St<br>San Francisco, CA</div>
+		<div class="phone">94111</div>
+		<div class="url"><a href="http://www.wingtip.com/club" target="_blank">Website</a></div>
+	</div>
+</div>
+
+<style>
+.listItem {
+    padding: 10px;
+    font-size: 13px;
+    border-bottom: 1px solid #cccccc;
+    border-top: none;
+}
+
+.listItem div {
+	display: inline-block;
+	vertical-align: top;
+	margin: 2px;
+}
+.icon {
+    background-color: blue;
+	width: 25px;
+    height: 31px;
+	float: left;
+}
+.descr {
+    background-color: coral;
+    font-family: sans-serif;
+    width: 400px;
+    font-size: 13px;
+    left: 45px;
+    top: 50px;
+    height: 102px;
+    overflow: hidden;
+}
+.metadata {
+    background-color: green;
+    width: 115px;
+    left: 480px;
+    font-size: 14px;
+    line-height: 16px;
+    font-family: TradeGothicLTStdBoldCondensed;
+    text-rendering: optimizeLegibility;
+    text-transform: uppercase;
+    color: #8a8a8a;
+	float: right;
+}
+</style>
+
+<script>
+
+	export default {
+		data() {
+			return {
+				layersTree: {
+					visible: {},
+					expanded: {}
+				},
+				filter: ''
+			}
+		},
+		methods: {
+			closeToMe() {
+				L.leafletMap.locate({setView: true});
+			},
+			setFilter() {
+			}
+		},
+		
+		onstate({ changed, current, previous }) {
+			console.log('map onstate', changed, current, previous);
+		}
+	}
+</script>
