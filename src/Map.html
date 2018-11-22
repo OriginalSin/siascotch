@@ -2,7 +2,7 @@
 <div class="header">
   <div class="title">
 	<input class="zipcode" type="text" placeholder="Enter your City or Zip Code" size="25">
-	<input type="submit" value="SUBMIT" class="sButton">
+	<input type="submit" value="SUBMIT" class="sButton" on:click="search(this)">
   </div>
   <div class="mode-controls">
 	<a href="#STORE" class="menu STORE" on:click="set({filter: 'STORE'})">STORES</a>
@@ -11,9 +11,11 @@
 	<a href="#ALL" class="menu closetome" on:click="closeToMe()">CloseToMe</a>  
   </div>
 </div>
-<div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span></div>
+<div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span><span class="clasters"><input type="checkbox" checked={clasters ? true : false} class="" on:change="set({clasters: this.checked})" /> - clustering</span></div>
 <div class="viewItems">
-	<ListItem />
+	{#each layers as it}
+	<ListItem item={it} />
+	{/each}
 </div>
 
 <script>
@@ -21,129 +23,26 @@
 
 	const serverBase = window.serverBase || '//maps.kosmosnimki.ru/';
 
-	L.Icon.Default.imagePath = './';
-	var iconUrl = 'sia.jpg',
-		icon = new L.Icon.Default({
-			iconUrl: iconUrl,
-			iconRetinaUrl: iconUrl,
-			iconSize: [50, 50],
-			iconAnchor: [7, 37],
-			popupAnchor: [3, -25],
-			shadowUrl: iconUrl,
-			shadowSize: [0, 0],
-			shadowAnchor: [0, 0]
-		});
-
-var utils = {
-	buttons: ['zipcode', 'sButton', 'searchBARS', 'searchALL', 'searchSTORE', 'closetome'],
-	getButtonType: function(button) {
-		for (var i = 0, len = utils.buttons.length; i < len; i++) {
-			var type = utils.buttons[i];
-			if ( L.DomUtil.hasClass(button, type)) {
-				return type;
-			}
-		}
-		return null;
-	},
-	setCurrentType: function(type) {
-		for (var i = 2, len = utils.buttons.length; i < len; i++) {
-			var name = utils.buttons[i];
-				fname = type === name ? 'addClass' : 'removeClass';
-			L.DomUtil[fname](document.getElementsByClassName(name)[0], 'current');
-		}
-	},
-	locationfound: function(ev) {
-			console.log('locationfound', ev);
-	},
-	setFilter: function(ev) {
-		var button = ev ? ev.target : null,
-			type = button && button.className ? utils.getButtonType(button) : 'searchALL',
-			count = 0,
-			flayers = utils.geoJsonLayer.getLayers(),
-			bbox = map.getBounds();
-
-		if (type === 'sButton') {
-			var val = document.getElementsByClassName('zipcode')[0].value,
-				fname = val.match(/[^\d]/) ? 'Address' : 'Zipcode';
-			for (var i = 0, len = flayers.length; i < len; i++) {
-				var it = flayers[i],
-					pv = String(it.feature.properties[fname]);
-				if (pv.indexOf(val) !== -1) {
-					map.setView(it.getLatLng(), 17);
-					it.openPopup();
-					return;
-				}
-			}
-		} else if (type === 'closetome') {
-			map.locate({setView: true});
-		} else if (type.indexOf('search') !== -1) {
-			utils.setCurrentType(type);
-			flayers.forEach(function(it) {
-				var feature = it.feature,
-					props = feature.properties,
-					node = feature.dom,
-					flag = bbox.contains(it.getLatLng());
-
-				if (type === 'searchBARS') {
-					if (props.Category !== 'DRINK') { flag = false; }
-				} else if (type === 'searchSTORE') {
-					if (props.Category !== 'STORE') { flag = false; }
-				}
-				if (flag) {
-					count++;
-					L.DomUtil.removeClass(node, 'gmx-hidden');
-				} else {
-					L.DomUtil.addClass(node, 'gmx-hidden');
-				}
-			});
-			viewItemsCount.innerHTML = count;
-		}
-		// console.log(type)
-	},
-	getFeatureCollection: function(json) {
-		// var columns = json.columns;
-		return {
-			"type": "FeatureCollection", 
-			"features": json.map(function(it, i) {
-				var node = L.DomUtil.create('div', 'point-detail vcard');
-				node.innerHTML = '<div class="icon"><div class="name fn org overflow-controlled" title="' + it.Name + '"><a href="' + it.Website + '" target="none">' + it.Name + '</a></div><div class="caption">' + it.Description + '</div></div><div class="metadata"><strong><div class="address adr overflow-controlled" title="' + it.Address + '">' + it.Address + '</div><div class="phone tel overflow-controlled">(202) 543-9300</div><div class="url overflow-controlled"><a href="' + it.Website + '" target="_blank">Website</a></div></strong></div>';
-				// viewItems.appendChild(node);
-				return {
-						"type": "Feature", "id": i + 1,
-						"dom": node,
-						"properties": it,
-						"geometry": { "type": "Point", "coordinates": [it.Lng, it.Lat ] }
-				}
-			})
-		};
-	}
-};
-
 	export default {
 		data() {
 			return {
-				layersTree: {
-					visible: {},
-					expanded: {}
-				},
+				clasters: true,
+				layers: {},
 				filter: ''
 			}
 		},
 		methods: {
 			createMap(it) {
-				let {layersTree} = this.get();
+				let {clasters} = this.get();
 					it = it || {};
 				let app = it.app || {},
 					gmxMap = app.gmxMap || {},
 					state = it.state || {},
-					// layersTree = state.layersTree || {},
 					calendar = state.calendar || {},
 					mapID = gmxMap.mapID || '946GH',
 					apiKey = gmxMap.apiKey,
 					pos = state.map ? state.map.position : {},
 					siaJSON = (location.hostname !== '127.0.0.1' && location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
-
-				// console.log('createMap', it)
 				
 				fetch(siaJSON).then(function(response) {
 						return response.json();
@@ -155,9 +54,6 @@ var utils = {
 							L.leafletMap.remove();
 						}
 
-						layersTree = state.layersTree || layersTree;
-						this.layersTree = layersTree;
-
 						let node = document.getElementsByClassName('map')[0];
 						let map = L.leafletMap = new L.Map(node, {
 							srs: 3857,
@@ -167,18 +63,29 @@ var utils = {
 							})],
 							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
 							zoom: pos.z || 4
-						});//.on('moveend', this.setFilter.bind(this));
-						// L.leafletMap = map;
+						}).on('moveend', this.setFilter.bind(this));
 
-						let featureCollection = utils.getFeatureCollection(json),
+						let featureCollection = {
+								type: 'FeatureCollection', 
+								features: json.map(function(it, i) {
+									return {
+										type: 'Feature', id: i + 1,
+										properties: it,
+										geometry: { type: 'Point', coordinates: [it.Lng, it.Lat ] }
+								}})
+							},
 							markers = L.markerClusterGroup({
 								showCoverageOnHover: false,
-								disableClusteringAtZoom: 16
+								disableClusteringAtZoom: clasters ? 16 : 0
 							});
 
-						let geoJsonLayer = utils.geoJsonLayer = L.geoJson(featureCollection, {
+						let geoJsonLayer = this.geoJsonLayer = L.geoJson(featureCollection, {
 							pointToLayer: function (geoJsonPoint, latlng) {
-								return L.marker(latlng, { icon: icon });
+								return L.marker(latlng, { icon: L.divIcon({
+									iconSize: [26, 26],
+									html: geoJsonPoint.id || '21',
+									className: 'sia-icon'
+								}) });
 							},
 							onEachFeature: function (feature, layer) {
 								let props = feature.properties,
@@ -186,9 +93,10 @@ var utils = {
 									html = img +
 										'<br><strong>' + props.Name + '</strong>\
 										<br>' + props.Address + '\
-										<br>' + props['Phone Number'] + '\
+										// <br>' + props['Phone Number'] + '\
+										<br>' + props.Zipcode + '\
 										<a href="' + props.Website + '">WEBSITE</a>';
-								layer.bindPopup(html);
+								layer.bindPopup(html, {autoClose: false, closeOnClick: false, keepInView: true});
 							}
 						});
 
@@ -204,16 +112,30 @@ var utils = {
 			closeToMe() {
 				L.leafletMap.locate({setView: true});
 			},
+			search(node) {
+				console.log('search', node);
+				let flayers = this.geoJsonLayer.getLayers(),
+					val = node.previousElementSibling.value.trim().toUpperCase(),
+					fname = val.match(/[^\d]/) ? 'Address' : 'Zipcode';
+				for (let i = 0, len = flayers.length; i < len; i++) {
+					let it = flayers[i],
+						pv = String(it.feature.properties[fname]).toUpperCase();
+					if (pv.indexOf(val) !== -1) {
+						L.leafletMap.setView(it.getLatLng(), 17);
+						it.openPopup();
+						return;
+					}
+				}
+			},
 			setFilter() {
-				if (utils.geoJsonLayer) {
+				if (this.geoJsonLayer) {
 					let {filter} = this.get();
-					let flayers = utils.geoJsonLayer.getLayers(),
+					let flayers = this.geoJsonLayer.getLayers(),
 						bbox = L.leafletMap.getBounds(),
 						layers = [];
 					flayers.forEach(function(it) {
-						var feature = it.feature,
+						let feature = it.feature,
 							props = feature.properties,
-							// node = feature.dom,
 							flag = bbox.contains(it.getLatLng());
 
 						if (filter && props.Category !== filter) { flag = false; }
@@ -228,6 +150,7 @@ var utils = {
 					node.getElementsByClassName('STORE')[0].classList[filter === 'STORE' ? 'add' : 'remove']('current');
 					node.getElementsByClassName('DRINK')[0].classList[filter === 'DRINK' ? 'add' : 'remove']('current');
 					node.getElementsByClassName('ALL')[0].classList[filter === '' ? 'add' : 'remove']('current');
+					this.set({layers: layers});
 				}
 			}
 		},
@@ -244,7 +167,11 @@ var utils = {
 			if (changed.filter) {
 				this.setFilter(current.filter);
 			}
-			
+			if (changed.clasters && this.markers) {
+				this.markers.options.disableClusteringAtZoom = current.clasters ? 16 : 0;
+				this.markers.clearLayers();
+				this.markers.addLayers(this.geoJsonLayer.getLayers());
+			}
 		}
 	}
 </script>
@@ -258,8 +185,12 @@ var utils = {
 .title {
 	float: left;
 }
-.mode-controls {
+.mode-controls, .clasters {
 	float: right;
+}
+.viewItemsCountCont {
+    margin-top: 30px;
+    color: #8a8a8a;
 }
 .header, .viewItemsCountCont, .viewItems, .map, #site-info-text {
 	max-width: 932px;
@@ -268,6 +199,11 @@ var utils = {
     padding: 10px;
 	clear: both;
     margin: 0 auto;
+}
+.viewItems {
+    max-height: 500px;
+	overflow-x: hidden;
+    overflow-y: scroll;
 }
 .mode-controls a {
 	float: left;
@@ -325,4 +261,6 @@ var utils = {
     height: 31px;
     cursor: pointer;
 }
+
+
 </style>

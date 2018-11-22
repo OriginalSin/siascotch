@@ -29,15 +29,13 @@
 </div>
 
 <div id="mobile-header">
-	<div class="mobile-wrapper">
-		<div class="mobile-logo">
+		<span class="mobile-logo">
 			<a href="//siascotch.com/" title="SIA Scotch Whisky"><img src="//siascotch.com/wp-content/uploads/2013/07/SIA_Scotch_Whisky_Logo.png" border="0" alt="SIA Scotch Whisky"></a>
 			<a href="//shopsiascotch.com" class="home_m" title="BUY SIA ONLINE"><img src="//siascotch.com/images/a.gif" border="0" class="buy" alt="BUY SIA ONLINE"></a>
-		 </div>
-		<div class="mobile-menu">
+		 </span>
+		<span class="mobile-menu">
 			<span class="nav_trigger"><i class="fa fa-navicon" on:click="openMenu()"></i></span>
-		</div>
-	</div>
+		</span>
 </div>
 
 {#if menu !== 'retailers'}
@@ -213,6 +211,9 @@
 	.push_sidebar.sidebarOpen {
 		left: 32%;
 		color: green;
+	}
+	.hfeed {
+		display: none;
 	}
 }
 /*

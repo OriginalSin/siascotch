@@ -1,12 +1,12 @@
 .simple-banner {
     border-bottom: 2px solid #DEDEDE;
 	width:100%;
-	position: fixed;
+	/* position: fixed; */
     z-index: 2000;
 	background: #d70021;
 }
 .simple-banner-inner{
-    width: 90%;
+    /* width: 90%; */
     margin: 0 auto;
     text-align: center;
     padding: 5px 0 5px 0;
@@ -49,4 +49,43 @@
 }
 #site-info-text {
     clear: both;
+}
+.sia-icon {
+	background-color: white;
+    border: 3px solid #ef9404;
+    border-radius: 16px;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    font-weight: 900;
+    padding-top: 1px;
+}
+.sia-icon:after {
+    display: block;
+    content: "";
+    border-color: #ef9404 transparent transparent transparent;
+    border-style: solid;
+    border-width: 6px;
+    /* height: 0; */
+    width: 0;
+    position: relative;
+    bottom: -3px;
+    left: 4px;
+}
+/*	for scrollbar	*/
+::-webkit-scrollbar
+{
+	cursor: pointer;
+	width: 4px;  /* for vertical scrollbars */
+	height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(0, 0, 0, 0.5);
 }

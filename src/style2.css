@@ -64,24 +64,24 @@ Text Domain: twentyten
 border-bottom:1px solid #e5e5e5;
 padding-top:8px;
 }
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
- caption, tfoot, thead {
-	background: transparent;
-	border: 0;
-	margin: 0;
-	padding: 0;
-	vertical-align: top;
-}
-body {
-	line-height: 1;
-}
+/* html, body, div, span, applet, object, iframe, */
+/* h1, h2, h3, h4, h5, h6, p, blockquote, pre, */
+/* a, abbr, acronym, address, big, cite, code, */
+/* del, dfn, em, font, img, ins, kbd, q, s, samp, */
+/* small, strike, strong, sub, sup, tt, var, */
+/* b, u, i, center, */
+/* dl, dt, dd, ol, ul, li, */
+/* fieldset, form, label, legend, */
+ /* caption, tfoot, thead { */
+	/* background: transparent; */
+	/* border: 0; */
+	/* margin: 0; */
+	/* padding: 0; */
+	/* vertical-align: top; */
+/* } */
+/* body { */
+	/* line-height: 1; */
+/* } */
 h1, h2, h3, h4, h5, h6 {
 	clear: both;
 	font-weight: normal;
@@ -347,13 +347,13 @@ DESCRIPTION: Full width content with no sidebar; used for attachment pages
 
 /* =Fonts
 -------------------------------------------------------------- */
-body,
-input,
-textarea,
-.page-title span,
-.pingback a.url {
-	font-family: Georgia, "Bitstream Charter", serif;
-}
+/* body, */
+/* input, */
+/* textarea, */
+/* .page-title span, */
+/* .pingback a.url { */
+	/* font-family: Georgia, "Bitstream Charter", serif; */
+/* } */
 h3#comments-title,
 h3#reply-title,
 
@@ -438,14 +438,14 @@ code {
 -------------------------------------------------------------- */
 
 /* Main global 'theme' and typographic styles */
-body {
+/* body { */
 	
-}
-body{
-color: #000;
-	font-size: 11pt;
-	line-height: 18px;
-}
+/* } */
+/* body{ */
+/* color: #000; */
+	/* font-size: 11pt; */
+	/* line-height: 18px; */
+/* } */
 input,
 textarea {
 	color: #000;
@@ -563,16 +563,16 @@ textarea {
 	padding: 2px;
 }
 a:link {
-	color: #e66207;
-	text-decoration:underline;
+	color: #ef9404;
+	text-decoration:none;
 }
 a:visited {
-	color: #e66207;
+	color: #ef9404;
 }
 a:active,
 a:hover {
-	color: #e66207;
-	text-decoration:none;
+	color: #ef9404;
+	text-decoration:underline;
 }
 
 /* Text meant only for screen readers */
@@ -2965,7 +2965,7 @@ h2.widgettitle{
     line-height: 60px;
     font-weight: bolder;
 	}
-	
+/*
 	.name{
 	    font-family: 'ACaslonPro-Regular';
     color: #000;
@@ -2975,7 +2975,7 @@ h2.widgettitle{
     padding-left: 40px;
 		
 	}
-	
+*/
 	.buy-button{
 	       padding-top: 36px;
     padding-left: 15%;
@@ -3017,7 +3017,7 @@ margin:0 0 0 0;
 width:100%;
 background:#fff;
 min-height:80px;
-position:fixed;
+/* position:fixed; */
 border-bottom:1px solid #CCC;
 z-index:9999;
 
