@@ -55,7 +55,7 @@
 					<ul id="menu-main_menu" class="menu"> 
 						<li><a href="//shopsiascotch.com" class="home_m" title="SIA Scotch Whisky - Buy SIA Online">
 						<img src="//siascotch.com/images/a.gif" border="0" class="buy" alt="Buy SIA Online"></a></li>
-						<li on:click="set({menu: 'retailers'})"><a href="#ret" class="contact_m" title="SIA Scotch Whisky - Find a Retailer">
+						<li on:click="set({menu: 'retailers'})"><a href="#ret" class="contact_m {menu === 'retailers' ? 'current' : ''}" title="SIA Scotch Whisky - Find a Retailer">
 						<img src="//siascotch.com/images/FIND-A-RETAILER.gif" border="0" class="buy-2" alt="Find a Retailer"> 
 						</a></li>
 						<li><a href="//siascotch.com/about" class="about_m" title="SIA Scotch Whisky - About">  <img src="//siascotch.com/images/SIA_nav_ABOUT.gif" class="about" border="0" alt="ABOUT"> </a></li>
@@ -170,20 +170,15 @@
 		components: {
 			HoverImage,
 			Map
-		},
-
-		onstate({ changed, current, previous }) {
-			console.log('in onstate', changed, current, previous);
 		}
 	}
 	
-/*
-
-*/
 </script>
 
 <style>
-
+li a.current {
+	background-color: black;
+}
 .butleSIA {
     width: 244px;
     height: 932px;

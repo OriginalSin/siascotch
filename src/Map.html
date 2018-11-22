@@ -11,7 +11,7 @@
 	<a href="#ALL" class="menu closetome" on:click="closeToMe()">CloseToMe</a>  
   </div>
 </div>
-<div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span><span class="clasters"><input type="checkbox" checked={clasters ? true : false} class="" on:change="set({clasters: this.checked})" /> - clustering</span></div>
+<div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span></div>
 <div class="viewItems">
 	{#each layers as it}
 	<ListItem item={it} />
@@ -22,11 +22,11 @@
 	import ListItem from './ListItem.html';
 
 	const serverBase = window.serverBase || '//maps.kosmosnimki.ru/';
-
+//<span class="clasters"><input type="checkbox" checked={clasters ? true : false} class="" on:change="set({clasters: this.checked})" /> - clustering</span>
 	export default {
 		data() {
 			return {
-				clasters: true,
+				clasters: false,
 				layers: {},
 				filter: ''
 			}
@@ -58,9 +58,11 @@
 						let map = L.leafletMap = new L.Map(node, {
 							srs: 3857,
 							layers: [L.tileLayer('https://tilessputnik.ru/{z}/{x}/{y}.png', {
-								maxZoom: 17,
-								attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+								maxZoom: 17
+								// ,
+								// attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 							})],
+							attributionControl: false,
 							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
 							zoom: pos.z || 4
 						}).on('moveend', this.setFilter.bind(this));
@@ -80,23 +82,29 @@
 							});
 
 						let geoJsonLayer = this.geoJsonLayer = L.geoJson(featureCollection, {
-							pointToLayer: function (geoJsonPoint, latlng) {
+							pointToLayer: (geoJsonPoint, latlng) => {
 								return L.marker(latlng, { icon: L.divIcon({
 									iconSize: [26, 26],
 									html: geoJsonPoint.id || '21',
 									className: 'sia-icon'
 								}) });
 							},
-							onEachFeature: function (feature, layer) {
+							onEachFeature: (feature, layer) => {
 								let props = feature.properties,
 									img = props.Image ? '<img src="' + props.Image + '" />' : '',
 									html = img +
 										'<br><strong>' + props.Name + '</strong>\
 										<br>' + props.Address + '\
-										// <br>' + props['Phone Number'] + '\
 										<br>' + props.Zipcode + '\
+										<br>' + props['Phone Number'] + '\
 										<a href="' + props.Website + '">WEBSITE</a>';
-								layer.bindPopup(html, {autoClose: false, closeOnClick: false, keepInView: true});
+								// layer.bindPopup(html); //, {autoClose: false, closeOnClick: false, keepInView: true});
+								layer.on('click', () => {
+									L.popup()
+										.setLatLng(layer.getLatLng())
+										.setContent(html)
+										.openOn(map);
+								});
 							}
 						});
 
@@ -108,6 +116,9 @@
 						this.setFilter();
 						
 					}.bind(this));
+			},
+			moveend() {
+				console.log('moveend', this);
 			},
 			closeToMe() {
 				L.leafletMap.locate({setView: true});
@@ -191,6 +202,7 @@
 .viewItemsCountCont {
     margin-top: 30px;
     color: #8a8a8a;
+	display: none;
 }
 .header, .viewItemsCountCont, .viewItems, .map, #site-info-text {
 	max-width: 932px;

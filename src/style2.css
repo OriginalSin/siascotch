@@ -652,12 +652,9 @@ div.menu li {
 #access a {
 	color: #000;
 	display: block;
-	line-height: 31px;
-	
+	line-height: 20px;
 	text-decoration: none;
-	
 }
-
 
 #access ul li {
 padding: 0 11px;

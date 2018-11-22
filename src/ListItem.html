@@ -2,11 +2,11 @@
 	<div class="icon">{item.feature.id}</div>
 	<div class="descr">
 		<div class="name" title="{props.Name}"><a href="{props.Website}" target="none">{@html props.Name}</a></div>
-		<div class="caption">{@html props.Description}</div>
 	</div>
 	<div class="metadata">
 		<div class="address" title="{props.Address}">{@html props.Address}</div>
-		<div class="phone">{props.Zipcode} <span class="url"><a href="{props.Website}" target="_blank">Website</a></span></div>
+		<div class="zipcode">{props.Zipcode}</div>
+		<div class="phone">{props['Phone Number']} <span class="url"><a href="{props.Website}" target="_blank">Website</a></span></div>
 		
 	</div>
 </div>
