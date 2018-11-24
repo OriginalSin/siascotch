@@ -1,5 +1,5 @@
 <div class="listItem">
-	<div class="icon">{item.feature.id}</div>
+	<div class="icon" on:click="setView(item)" title="Show on map">{item.feature.id}</div>
 	<div class="listBlock">
 		<div class="descr">
 			<div class="name" title="{props.Name}"><a href="{props.Website}" target="none">{@html props.Name}</a></div>
@@ -43,6 +43,7 @@
     font-weight: 900;
     padding-top: 4px;
 	margin-right: 8px;
+	cursor: pointer;
 }
 .icon:after {
     display: block;
@@ -70,74 +71,16 @@
     /* height: 102px; */
     overflow: hidden;
 }
-.name {
-    /* position: absolute; */
-    /* top: 20px; */
-    /* left: 45px; */
-    /* font-family: TradeGothicLTStdBoldCondensed; */
-    /* text-rendering: optimizeLegibility; */
-    /* text-transform: uppercase; */
-	/* font-weight: bold; */
-    /* font-size: 20px; */
-    /* color: #ef9404; */
-    /* line-height: 20px; */
-	/* display: block; */
-    /* width: 300px; */
-    /* white-space: nowrap; */
-}
-/* a { */
-    /* text-decoration: none; */
-	/* color: #ef9404; */
-/* } */
-/* a:link { */
-    /* text-decoration: none; */
-	/* color: #ef9404; */
-    /* font-weight: bold; */
-/* } */
-
-/* a:visited { */
-	/* color: #ef9404; */
-/* } */
-/* a:active, a:hover { */
-	/* color: #ef9404; */
-	/* text-decoration:underline; */
-/* } */
 
 .metadata {
 	display: flow-root;
     color: #8a8a8a;
-    /* background-color: green; */
-    /* width: 115px; */
-    /* left: 480px; */
-    /* font-size: 14px; */
-    /* line-height: 16px; */
-    /* font-family: TradeGothicLTStdBoldCondensed; */
-    /* text-rendering: optimizeLegibility; */
-    /* text-transform: uppercase; */
-	/* float: right; */
-}
-.metadata > div {
-    /* margin-bottom: 9px; */
-	/* white-space: nowrap; */
-}
-
-.address {
-    /* padding-top: 8px; */
 }
 
 @media only screen and (max-width: 480px) {
-	.listBlock {
-		/* width: calc(100vw - 100px); */
-	}
 	.listItem {
 		display: block;
 		width: unset;
-	}
-	.descr {
-		/* background-color: gray; */
-		/* display: block; */
-		/* width: calc(100vw - 100px); */
-		/* float: right; */
 	}
 	.name {
 		white-space: nowrap;
@@ -170,7 +113,8 @@
 			closeToMe() {
 				L.leafletMap.locate({setView: true});
 			},
-			setFilter() {
+			setView(it) {
+				L.leafletMap.setView(it.getLatLng(), 17);
 			}
 		},
 		
