@@ -57,10 +57,8 @@
 						let node = document.getElementsByClassName('map')[0];
 						let map = L.leafletMap = new L.Map(node, {
 							srs: 3857,
-							layers: [L.tileLayer('https://tilessputnik.ru/{z}/{x}/{y}.png', {
+							layers: [L.tileLayer('//maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
 								maxZoom: 17
-								// ,
-								// attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 							})],
 							attributionControl: false,
 							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
