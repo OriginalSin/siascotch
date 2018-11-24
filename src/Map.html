@@ -5,10 +5,10 @@
 	<input type="submit" value="SUBMIT" class="sButton" on:click="search(this)">
   </div>
   <div class="mode-controls">
+	<span class="filterTitle">Filter by</span>
+	<a href="#ALL" class="menu current ALL" on:click="set({filter: ''})">ALL</a>  
 	<a href="#STORE" class="menu STORE" on:click="set({filter: 'STORE'})">STORES</a>
 	<a href="#DRINK" class="menu DRINK" on:click="set({filter: 'DRINK'})">BARS</a>
-	<a href="#ALL" class="menu current ALL" on:click="set({filter: ''})">ALL</a>  
-	<a href="#ALL" class="menu closetome" on:click="closeToMe()">CloseToMe</a>  
   </div>
 </div>
 <div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span></div>
@@ -114,7 +114,7 @@
 						map.addLayer(markers);
 						this.markers = markers;
 						this.setFilter();
-						
+						L.leafletMap.locate({setView: true});
 					}.bind(this));
 			},
 			moveend() {
@@ -171,7 +171,7 @@
 		},
 
 		onstate({ changed, current, previous }) {
-			console.log('map onstate', changed, current, previous);
+			/* console.log('map onstate', changed, current, previous); */
 			if (changed.menu && current.menu === 'retailers') {
 				this.createMap(current.permalink);
 			}
@@ -197,7 +197,11 @@
 	float: left;
 }
 .mode-controls, .clasters {
-	float: right;
+	float: left;
+	height: 31px;
+	margin-left: 46px;
+	top: 3px;
+    position: relative;
 }
 .viewItemsCountCont {
     margin-top: 30px;
@@ -211,39 +215,28 @@
     padding: 10px;
 	clear: both;
     margin: 0 auto;
+	font-weight: bold;
+	text-transform: uppercase;
 }
-.viewItems {
-    max-height: 500px;
-	overflow-x: hidden;
-    overflow-y: scroll;
-}
-.mode-controls a {
+
+.mode-controls * {
+    height: 26px;
 	float: left;
-    font-family: TradeGothicLTStdBoldCondensed;
-    /* text-rendering: optimizeLegibility;
-    text-transform: uppercase; */
-    text-decoration: unset;
-    font-weight: bold;
-    text-align: center;
-    color: black;
-    /* display: inline-block; */
-    /* margin: 4px; */
-    padding: 4px;
-    /* width: 60px; */
-    /* height: 31px; */
-    background-color: #f0f0f0;
-    /* line-height: 33px; */
+    padding: 4px 8px;
+}
+.mode-controls .filterTitle {
+    color: #ef9404;
 }
 .mode-controls .current {
     position: relative;
     background-color: #ed9605;
     color: black;
 }
-@media only screen and (max-width: 480px) {
-	.mode-controls {
-		padding-top: 6px;
-	}
+
+.mode-controls a {
+    color: black;
 }
+/*
 .mode-controls a.current:after {
     position: absolute;
     display: block;
@@ -257,6 +250,7 @@
     bottom: -10px;
     left: 37%;
 }
+*/
 .title input {
     font-size: 16px;
 	padding: 4px;
@@ -274,5 +268,10 @@
     cursor: pointer;
 }
 
+@media only screen and (max-width: 480px) {
+	.mode-controls {
+		padding-top: 6px;
+	}
+}
 
 </style>
