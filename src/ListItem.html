@@ -5,8 +5,7 @@
 			<div class="name" title="{props.Name}"><a href="{props.Website}" target="none">{@html props.Name}</a></div>
 		</div>
 		<div class="metadata">
-			<div class="address" title="{props.Address}">{@html props.Address}</div>
-			<div class="zipcode">{props.Zipcode}</div>
+			<div class="address" title="{props.Address}">{@html props.Address} {props.Zipcode}</div>
 			<div class="phone">{props['Phone Number']}</div>
 			<div class="url"><a href="{props.Website}" target="_blank">Buy online now</a></div>
 			
@@ -57,17 +56,20 @@
     bottom: -6px;
     left: 7px;
 }
+.name {
+	white-space: nowrap;
+}
 .descr div {
-	clear: both;
-	display: block;
+	/* clear: both; */
+	/* display: block; */
 }
 .descr {
     /* background-color: coral; */
-    font-family: sans-serif;
-    width: 74%;
-    font-size: 13px;
-    left: 45px;
-    top: 50px;
+    /* font-family: sans-serif; */
+    /* width: 74%; */
+    /* font-size: 13px; */
+    /* left: 45px; */
+    /* top: 50px; */
     /* height: 102px; */
     overflow: hidden;
 }
@@ -81,9 +83,6 @@
 	.listItem {
 		display: block;
 		width: unset;
-	}
-	.name {
-		white-space: nowrap;
 	}
 	.metadata div {
 		display: block;

@@ -1,8 +1,8 @@
 <div class="map"></div>
 <div class="header">
   <div class="title">
-	<input class="zipcode" type="text" placeholder="Enter your City or Zip Code" size="25">
-	<input type="submit" value="SUBMIT" class="sButton" on:click="search(this)">
+	<input class="zipcode" type="text" placeholder="Enter your City or Zip Code">
+	<span class="sButton" on:click="search(this)">SUBMIT</span>
   </div>
   <div class="mode-controls">
 	<span class="filterTitle">Filter by</span>
@@ -188,18 +188,18 @@
 <style>
 .map {
     position: relative;
-    height: 484px;
+    height: 300px;
 	margin: 0 auto;
 }
 .title {
 	float: left;
 }
 .mode-controls, .clasters {
-	float: left;
+	float: right;
 	height: 31px;
-	margin-left: 46px;
 	top: 3px;
     position: relative;
+	/* margin-left: 46px; */
 }
 .viewItemsCountCont {
     margin-top: 30px;
@@ -220,7 +220,7 @@
 .mode-controls * {
     height: 26px;
 	float: left;
-    padding: 4px 8px;
+    padding: 4px;
 }
 .mode-controls .filterTitle {
     color: #ef9404;
@@ -253,17 +253,20 @@
     font-size: 16px;
 	padding: 4px;
 }
-.title input.sButton {
+.title input.zipcode {
+	width: 200px;
+}
+.title .sButton {
     background-color: #ed9605;
-    border: 0;
-    font-family: TradeGothicLTStdBoldCondensed;
-    font-weight: bold;
-    text-rendering: optimizeLegibility;
-    text-transform: uppercase;
-    text-align: center;
+	padding: 4px 8px;
     color: black;
-    height: 31px;
     cursor: pointer;
+    /* border: 0; */
+    /* font-family: TradeGothicLTStdBoldCondensed; */
+    /* font-weight: bold; */
+    /* text-rendering: optimizeLegibility; */
+    /* text-transform: uppercase; */
+    /* text-align: center; */
 }
 
 @media only screen and (max-width: 480px) {
