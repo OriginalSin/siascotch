@@ -43,10 +43,21 @@
 					apiKey = gmxMap.apiKey,
 					pos = state.map ? state.map.position : {},
 					siaJSON = (location.hostname !== '127.0.0.1' && location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
-				
-				fetch(siaJSON).then(function(response) {
+
+				siaJSON = new URL('https://www.googleapis.com/fusiontables/v1/query');
+				siaJSON.searchParams.append('sql', "SELECT * FROM 1n6mV0CfjjuDUjUexG73zU1avmkw9VEapZh5q9qE WHERE 'Category' IN ('DRINK', 'STORE')   AND 'Visible' NOT EQUAL TO 'NO'  ORDER BY 'Weight' DESC")
+				siaJSON.searchParams.append('key', 'AIzaSyDgG8KyoDE20MRSQwXJapCyOZi0c1mlcxE');
+				fetch(siaJSON, {
+				}).then(function(response) {
 						return response.json();
+					// }).then(function(json) {
+				// console.log('ddddd', json);
+					// });
+
+				// fetch(siaJSON).then(function(response) {
+						// return response.json();
 					}).then(function(json) {
+				 console.log('ddddd', json);
 						if(app.theme) {
 							document.body.classList.add(app.theme);
 						}
@@ -65,11 +76,26 @@
 							zoom: pos.z || 4
 						}).on('moveend', this.setFilter.bind(this));
 
+						let columns = json.columns.reduce((p, c, i) => {
+							p[c] = i;
+							return p;
+						}, {});
 						let featureCollection = {
 								type: 'FeatureCollection', 
-								features: json.map(function(it, i) {
+								features: json.rows.map(function(arr, i) {
+									let it = {id: i + 1};
+									arr.forEach((pt, j) => {
+										let key = json.columns[j];
+										if (key === 'Address' && !('State' in columns)) {
+											let arr = pt.split(',');
+											it.State = arr[arr.length - 1].trim();
+										} else if (typeof(pt) === 'string' && (key === 'Lng' || key === 'Lat')) {
+											pt = Number(pt.replace(/[^\.\d]/g, ''));
+										}
+										it[key] = pt;
+									});
 									return {
-										type: 'Feature', id: i + 1,
+										type: 'Feature', id: it.id,
 										properties: it,
 										geometry: { type: 'Point', coordinates: [it.Lng, it.Lat ] }
 								}})
@@ -125,7 +151,8 @@
 				console.log('search', node);
 				let flayers = this.geoJsonLayer.getLayers(),
 					val = node.previousElementSibling.value.trim().toUpperCase(),
-					fname = val.match(/[^\d]/) ? 'Address' : 'Zipcode';
+					fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode');
+
 				for (let i = 0, len = flayers.length; i < len; i++) {
 					let it = flayers[i],
 						pv = String(it.feature.properties[fname]).toUpperCase();
