@@ -1,32 +1,41 @@
 <div class="listItem">
-	<div class="icon" on:click="setView(item)" title="Show on map">{item.feature.id}</div>
-	<div class="listBlock">
-		<div class="descr">
-			<div class="name" title="{props.Name}"><a href="{props.Website}" target="none">{@html props.Name}</a></div>
-		</div>
-		<div class="metadata">
-			<div class="address" title="{props.Address}">{@html props.Address} {props.Zipcode}</div>
-			<div class="phone">{props['Phone Number']}</div>
-			<div class="url"><a href="{props.Website}" target="_blank">Buy online now</a></div>
-			
-		</div>
-	</div>
+	<table>
+	<tr>
+		<td><div class="icon" on:click="setView(item)" title="Show on map">{item.feature.id}</div></td>
+		<td class="listBlock">
+			<div class="descr">
+				<div class="name" title="{props.Name}"><a href="{props.Website}" target="none">{@html props.Name}</a></div>
+			</div>
+			<div class="metadata">
+				<div class="address" title="{props.Address}">{@html props.Address} {props.Zipcode}</div>
+				<div class="phone">{props['Phone Number']}</div>
+				<div class="url"><a href="{props.Website}" target="_blank">Buy online now</a></div>
+				
+			</div>
+		</td>
+	</tr>
+	</table>
 </div>
 
 <style>
 .listItem {
     padding: 10px;
     border-bottom: 1px solid #cccccc;
-    /* border-top: none; */
+    /* border-top: none;
 	display: inline-table;
+	*/
 	/* clear: both; */
-	width: 33%;
+	width: 32%;
+	height: 126px;
+	float: left;
 	font-size: 14px;
 	font-weight: bold;
     text-transform: uppercase;
 }
 
-.listItem div {
+.listItem td {
+	vertical-align: top;
+	max-width: 216px;
 	/* display: inline-block; */
 	/* vertical-align: top; */
 	/* margin: 2px; */
@@ -49,12 +58,12 @@
     content: "";
     border-color: #ef9404 transparent transparent transparent;
     border-style: solid;
-    border-width: 5px;
+    border-width: 10px;
     /* height: 0; */
     width: 0;
     position: relative;
-    bottom: -6px;
-    left: 7px;
+    bottom: -5px;
+    left: 3px;
 }
 .name {
 	white-space: nowrap;
@@ -83,6 +92,7 @@
 	.listItem {
 		display: block;
 		width: unset;
+		height: unset;
 	}
 	.metadata div {
 		display: block;

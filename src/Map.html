@@ -73,7 +73,7 @@
 							})],
 							attributionControl: false,
 							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
-							zoom: pos.z || 4
+							zoom: pos.z || (L.Browser.mobile ? 3 : 4)
 						}).on('moveend', this.setFilter.bind(this));
 
 						let columns = json.columns.reduce((p, c, i) => {
@@ -221,16 +221,22 @@
 	float: left;
 }
 .mode-controls, .clasters {
-	float: right;
-	height: 31px;
-	top: 3px;
-    position: relative;
-	/* margin-left: 46px; */
+    /* float: right; */
+    height: 31px;
+    top: 12px;
+    right: 4px;
+    position: absolute;
 }
 .viewItemsCountCont {
     margin-top: 30px;
     color: #8a8a8a;
 	display: none;
+}
+.header {
+    background-color: lightgray;
+    margin-top: 4px;
+    height: 49px;
+    position: relative;
 }
 .header, .viewItemsCountCont, .viewItems, .map, #site-info-text {
 	max-width: 932px;
@@ -298,6 +304,12 @@
 @media only screen and (max-width: 480px) {
 	.mode-controls {
 		padding-top: 6px;
+	}
+	.header {
+	    height: 80px;
+	}
+	.mode-controls {
+	    top: 40px;
 	}
 }
 
