@@ -45,7 +45,7 @@
 					siaJSON = (location.hostname !== '127.0.0.1' && location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
 
 				siaJSON = new URL('https://www.googleapis.com/fusiontables/v1/query');
-				siaJSON.searchParams.append('sql', "SELECT * FROM 1n6mV0CfjjuDUjUexG73zU1avmkw9VEapZh5q9qE WHERE 'Category' IN ('DRINK', 'STORE')   AND 'Visible' NOT EQUAL TO 'NO'  ORDER BY 'Weight' DESC")
+				siaJSON.searchParams.append('sql', "SELECT * FROM 1n6mV0CfjjuDUjUexG73zU1avmkw9VEapZh5q9qE WHERE 'Category' IN ('DRINK', 'STORE') AND 'Visible' NOT EQUAL TO 'NO' ORDER BY 'Weight' DESC")
 				siaJSON.searchParams.append('key', 'AIzaSyDgG8KyoDE20MRSQwXJapCyOZi0c1mlcxE');
 				fetch(siaJSON, {
 				}).then(function(response) {
@@ -86,14 +86,19 @@
 									let it = {id: i + 1};
 									arr.forEach((pt, j) => {
 										let key = json.columns[j];
-										if (key === 'Address' && !('State' in columns)) {
-											let arr = pt.split(',');
-											it.State = arr[arr.length - 1].trim();
+										if (key === 'Images') {
+//console.log('ggg', key, it.Images)
+										} else if (key === 'Weight') {
+											pt = Number(pt) || 0;
 										} else if (typeof(pt) === 'string' && (key === 'Lng' || key === 'Lat')) {
 											pt = Number(pt.replace(/[^\.\d]/g, ''));
 										}
 										it[key] = pt;
 									});
+									if (!it.State) {
+										let arr = it.Address.split(',');
+										it.State = arr[arr.length - 1].trim();
+									}
 									return {
 										type: 'Feature', id: it.id,
 										properties: it,
@@ -115,12 +120,12 @@
 							},
 							onEachFeature: (feature, layer) => {
 								let props = feature.properties,
-									img = props.Image ? '<img src="' + props.Image + '" />' : '',
+									img = props.Images ? '<img src="' + props.Images + '" />' : '',
 									html = img +
 										'<br><strong>' + props.Name + '</strong>\
 										<br>' + props.Address + ' ' + props.Zipcode + '\
 										<br>' + props['Phone Number'] + '\
-										<a href="' + props.Website + '">WEBSITE</a>';
+										<a href="' + props.Website + '" target="none">WEBSITE</a>';
 								// layer.bindPopup(html); //, {autoClose: false, closeOnClick: false, keepInView: true});
 								layer.on('click', () => {
 									L.popup()
