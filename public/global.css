@@ -77,6 +77,13 @@ body.show_sidebar .push_sidebar {
     bottom: -3px;
     left: 4px;
 }
+.icon.DRINK, .sia-icon.DRINK {
+    border: 3px solid #ffc512;
+}
+.icon.DRINK:after, .sia-icon.DRINK:after {
+    border-color: #ffc512 transparent transparent transparent;
+}
+
 /*	for scrollbar	*/
 ::-webkit-scrollbar
 {

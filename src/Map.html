@@ -1,7 +1,7 @@
 <div class="map"></div>
 <div class="header">
   <div class="title">
-	<input class="zipcode" type="text" placeholder="Enter your City or Zip Code">
+	<input class="zipcode" type="text" placeholder="Enter your City, ST or Zip Code">
 	<span class="sButton" on:click="search(this)">SUBMIT</span>
   </div>
   <div class="mode-controls">
@@ -115,7 +115,7 @@
 								return L.marker(latlng, { icon: L.divIcon({
 									iconSize: [26, 26],
 									html: geoJsonPoint.id || '21',
-									className: 'sia-icon'
+									className: 'sia-icon ' + geoJsonPoint.properties.Category
 								}) });
 							},
 							onEachFeature: (feature, layer) => {
@@ -227,6 +227,7 @@
 }
 .mode-controls, .clasters {
     /* float: right; */
+	font-family: TradeGothicLTStdBoldCondensed;
     height: 31px;
     top: 12px;
     right: 4px;
@@ -287,19 +288,19 @@
 }
 */
 .title input {
-    font-size: 16px;
+    font-size: 13px;
 	padding: 4px;
 }
 .title input.zipcode {
 	width: 200px;
 }
 .title .sButton {
+    font-family: TradeGothicLTStdBoldCondensed;
     background-color: #ed9605;
 	padding: 4px 8px;
     color: black;
     cursor: pointer;
     /* border: 0; */
-    /* font-family: TradeGothicLTStdBoldCondensed; */
     /* font-weight: bold; */
     /* text-rendering: optimizeLegibility; */
     /* text-transform: uppercase; */
