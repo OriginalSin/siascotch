@@ -20,12 +20,14 @@
 <style>
 .listItem {
     padding: 10px;
+	font-family: TradeGothicLTStdBoldCondensed;
+
     border-bottom: 1px solid #cccccc;
     /* border-top: none;
 	display: inline-table;
 	*/
 	/* clear: both; */
-	width: 32%;
+	width: 256px;
 	height: 126px;
 	float: left;
 	font-size: 14px;
@@ -50,12 +52,13 @@
 
 .icon {
     float: left;
+	font-family: Arial;
     border: 3px solid #ef9404;
     border-radius: 16px;
     width: 32px;
     height: 32px;
     text-align: center;
-	font-size: 12px;
+	font-size: 13px;
     font-weight: 900;
     padding-top: 4px;
 	margin-right: 8px;
@@ -70,11 +73,12 @@
     /* height: 0; */
     width: 0;
     position: relative;
-    bottom: -6px;
+    bottom: -5px;
     left: 5px;
 }
 .name {
 	white-space: nowrap;
+	font-size: 18px;
 }
 .descr div {
 	/* clear: both; */
@@ -100,7 +104,7 @@
 @media only screen and (max-width: 480px) {
 	.listItem {
 		display: block;
-		width: unset;
+		width: 100%;
 		height: unset;
 	}
 	.metadata div {
