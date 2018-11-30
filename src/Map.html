@@ -1,8 +1,8 @@
 <div class="map"></div>
 <div class="header">
   <div class="title">
-	<input class="zipcode" type="text" placeholder="Enter your City, ST or Zip Code">
-	<span class="sButton" on:click="search(this)">SUBMIT</span>
+	<input class="zipcode" type="text" placeholder="Enter your City, ST or Zip Code" on:change="setFilter(true)">
+	<span class="sButton" on:click="setFilter(true)">SUBMIT</span>
   </div>
   <div class="mode-controls">
 	<span class="filterTitle">Filter by</span>
@@ -150,27 +150,34 @@
 			},
 			closeToMe() {
 				L.leafletMap.locate({setView: true});
-			},
+			},/*
 			search(node) {
 				console.log('search', node);
 				let flayers = this.geoJsonLayer.getLayers(),
 					val = node.previousElementSibling.value.trim().toUpperCase(),
-					fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode');
+					fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode'),
+					layers = [];
 
 				for (let i = 0, len = flayers.length; i < len; i++) {
 					let it = flayers[i],
 						pv = String(it.feature.properties[fname]).toUpperCase();
 					if (pv.indexOf(val) !== -1) {
-						L.leafletMap.setView(it.getLatLng(), 17);
-						it.openPopup();
-						return;
+						// L.leafletMap.setView(it.getLatLng(), 17);
+						// it.openPopup();
+						// return;
+						layers.push(it);
 					}
 				}
-			},
-			setFilter() {
+				this.markers.clearLayers();
+				this.markers.addLayers(layers);
+				this.set({layers: layers});
+			},*/
+			setFilter(fitFlag) {
 				if (this.geoJsonLayer) {
 					let {filter} = this.get();
 					let flayers = this.geoJsonLayer.getLayers(),
+						val = document.getElementsByClassName('zipcode')[0].value.trim().toUpperCase(),
+						fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode'),
 						bbox = L.leafletMap.getBounds(),
 						layers = [];
 					flayers.forEach(function(it) {
@@ -179,10 +186,12 @@
 							flag = bbox.contains(it.getLatLng());
 
 						if (filter && props.Category !== filter) { flag = false; }
+						if (val && String(props[fname]).toUpperCase().indexOf(val) === -1) { flag = false; }
 						if (flag) {
 							layers.push(it);
 						}
 					});
+					// document.getElementsByClassName('zipcode')[0].value = '';
 					document.getElementsByClassName('viewItemsCount')[0].innerHTML = layers.length;
 					this.markers.clearLayers();
 					this.markers.addLayers(layers);
@@ -190,6 +199,9 @@
 					node.getElementsByClassName('STORE')[0].classList[filter === 'STORE' ? 'add' : 'remove']('current');
 					node.getElementsByClassName('DRINK')[0].classList[filter === 'DRINK' ? 'add' : 'remove']('current');
 					node.getElementsByClassName('ALL')[0].classList[filter === '' ? 'add' : 'remove']('current');
+					if (fitFlag && layers.length) {
+						// L.leafletMap.fitBounds(this.markers.getBounds());
+					}
 					this.set({layers: layers});
 				}
 			}
