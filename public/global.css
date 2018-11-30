@@ -44,6 +44,9 @@ body.show_sidebar .push_sidebar {
 	background:  #fff;
 	color: #d70021;
 }
+.leaflet-popup-content a.Name {
+	font-size: larger;
+}
 .leaflet-control-zoom a:link {
 	text-decoration: unset;
 }
