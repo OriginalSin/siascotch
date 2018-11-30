@@ -1,8 +1,8 @@
 <div class="map"></div>
 <div class="header">
   <div class="title">
-	<input class="zipcode" type="text" placeholder="Enter your City, ST or Zip Code" on:change="setFilter(true)">
-	<span class="sButton" on:click="setFilter(true)">SUBMIT</span>
+	<input class="zipcode" type="text" placeholder="Enter your City, ST or Zip Code" on:change="search(true)">
+	<span class="sButton" on:click="search()">SUBMIT</span>
   </div>
   <div class="mode-controls">
 	<span class="filterTitle">Filter by</span>
@@ -150,9 +150,14 @@
 			},
 			closeToMe() {
 				L.leafletMap.locate({setView: true});
-			},/*
-			search(node) {
-				console.log('search', node);
+			},
+			search() {
+				let layers = this.setFilter();
+				if (layers.length) {
+					L.leafletMap.fitBounds(this.markers.getBounds());
+				}
+				// console.log('search', layers.length);
+				/*
 				let flayers = this.geoJsonLayer.getLayers(),
 					val = node.previousElementSibling.value.trim().toUpperCase(),
 					fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode'),
@@ -171,15 +176,16 @@
 				this.markers.clearLayers();
 				this.markers.addLayers(layers);
 				this.set({layers: layers});
-			},*/
+				*/
+			},
 			setFilter(fitFlag) {
+				let layers = [];
 				if (this.geoJsonLayer) {
 					let {filter} = this.get();
 					let flayers = this.geoJsonLayer.getLayers(),
 						val = document.getElementsByClassName('zipcode')[0].value.trim().toUpperCase(),
 						fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode'),
-						bbox = L.leafletMap.getBounds(),
-						layers = [];
+						bbox = L.leafletMap.getBounds();
 					flayers.forEach(function(it) {
 						let feature = it.feature,
 							props = feature.properties,
@@ -199,11 +205,13 @@
 					node.getElementsByClassName('STORE')[0].classList[filter === 'STORE' ? 'add' : 'remove']('current');
 					node.getElementsByClassName('DRINK')[0].classList[filter === 'DRINK' ? 'add' : 'remove']('current');
 					node.getElementsByClassName('ALL')[0].classList[filter === '' ? 'add' : 'remove']('current');
-					if (fitFlag && layers.length) {
+					// if (fitFlag && layers.length) {
 						// L.leafletMap.fitBounds(this.markers.getBounds());
-					}
+					// }
 					this.set({layers: layers});
+				// console.log('setFilter', layers.length);
 				}
+				return layers;
 			}
 		},
 
