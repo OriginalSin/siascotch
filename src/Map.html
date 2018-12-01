@@ -152,31 +152,13 @@
 				L.leafletMap.locate({setView: true});
 			},
 			search() {
-				let layers = this.setFilter();
-				if (layers.length) {
+				let layers = this.setFilter(),
+					val = document.getElementsByClassName('zipcode')[0].value.trim().toUpperCase();
+				if (val === '') {
+					L.leafletMap.setView(new L.LatLng(33.17434155100208, -98.0419921875), (L.Browser.mobile ? 3 : 4));
+				} else if (layers.length) {
 					L.leafletMap.fitBounds(this.markers.getBounds());
 				}
-				// console.log('search', layers.length);
-				/*
-				let flayers = this.geoJsonLayer.getLayers(),
-					val = node.previousElementSibling.value.trim().toUpperCase(),
-					fname = val.length === 2 ? 'State' : (val.match(/[^\d]/) ? 'Address' : 'Zipcode'),
-					layers = [];
-
-				for (let i = 0, len = flayers.length; i < len; i++) {
-					let it = flayers[i],
-						pv = String(it.feature.properties[fname]).toUpperCase();
-					if (pv.indexOf(val) !== -1) {
-						// L.leafletMap.setView(it.getLatLng(), 17);
-						// it.openPopup();
-						// return;
-						layers.push(it);
-					}
-				}
-				this.markers.clearLayers();
-				this.markers.addLayers(layers);
-				this.set({layers: layers});
-				*/
 			},
 			setFilter(fitFlag) {
 				let layers = [];
