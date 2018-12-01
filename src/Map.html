@@ -44,11 +44,30 @@
 					pos = state.map ? state.map.position : {},
 					siaJSON = (location.hostname !== '127.0.0.1' && location.pathname.indexOf('/public/') === -1 ? './public/' : '') + 'data/sia6.json';
 
+				if(app.theme) {
+					document.body.classList.add(app.theme);
+				}
+				if(L.leafletMap) {
+					L.leafletMap.remove();
+				}
+
+				let node = document.getElementsByClassName('map')[0];
+				let map = L.leafletMap = new L.Map(node, {
+					srs: 3857,
+					layers: [L.tileLayer('//maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
+						maxZoom: 17
+					})],
+					attributionControl: false,
+					center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
+					zoom: pos.z || (L.Browser.mobile ? 3 : 4)
+				}).on('moveend', this.setFilter.bind(this));
+				L.leafletMap.locate({setView: true});
+
 				siaJSON = new URL('https://www.googleapis.com/fusiontables/v1/query');
 				siaJSON.searchParams.append('sql', "SELECT * FROM 1n6mV0CfjjuDUjUexG73zU1avmkw9VEapZh5q9qE WHERE 'Category' IN ('DRINK', 'STORE') AND 'Visible' NOT EQUAL TO 'NO' ORDER BY 'Weight' DESC")
 				siaJSON.searchParams.append('key', 'AIzaSyDgG8KyoDE20MRSQwXJapCyOZi0c1mlcxE');
 				fetch(siaJSON, {
-				}).then(function(response) {
+				}).then((response) => {
 						return response.json();
 					// }).then(function(json) {
 				// console.log('ddddd', json);
@@ -56,25 +75,8 @@
 
 				// fetch(siaJSON).then(function(response) {
 						// return response.json();
-					}).then(function(json) {
+					}).then((json) => {
 				 // console.log('ddddd', json);
-						if(app.theme) {
-							document.body.classList.add(app.theme);
-						}
-						if(L.leafletMap) {
-							L.leafletMap.remove();
-						}
-
-						let node = document.getElementsByClassName('map')[0];
-						let map = L.leafletMap = new L.Map(node, {
-							srs: 3857,
-							layers: [L.tileLayer('//maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en', {
-								maxZoom: 17
-							})],
-							attributionControl: false,
-							center: new L.LatLng(pos.y || 33.17434155100208, pos.x || -98.0419921875),
-							zoom: pos.z || (L.Browser.mobile ? 3 : 4)
-						}).on('moveend', this.setFilter.bind(this));
 
 						let columns = json.columns.reduce((p, c, i) => {
 							p[c] = i;
@@ -142,15 +144,14 @@
 						map.addLayer(markers);
 						this.markers = markers;
 						this.setFilter();
-						L.leafletMap.locate({setView: true});
-					}.bind(this));
+					});
 			},
-			moveend() {
-				console.log('moveend', this);
-			},
-			closeToMe() {
-				L.leafletMap.locate({setView: true});
-			},
+			// moveend() {
+				// console.log('moveend', this);
+			// },
+			// closeToMe() {
+				// L.leafletMap.locate({setView: true});
+			// },
 			search() {
 				let layers = this.setFilter(),
 					val = document.getElementsByClassName('zipcode')[0].value.trim().toUpperCase();
@@ -204,7 +205,9 @@
 		onstate({ changed, current, previous }) {
 			/* console.log('map onstate', changed, current, previous); */
 			if (changed.menu && current.menu === 'retailers') {
-				this.createMap(current.permalink);
+				setTimeout(() => {
+					this.createMap(current.permalink);
+				});
 			}
 			if (changed.filter) {
 				this.setFilter(current.filter);
