@@ -6,9 +6,9 @@
   </div>
   <div class="mode-controls">
 	<span class="filterTitle">Filter by</span>
-	<a href="#ALL" class="menu current ALL" on:click="set({filter: ''})" title="Show all">ALL</a>  
 	<a href="#STORE" class="menu STORE" on:click="set({filter: 'STORE'})" title="Show only stores">STORES</a>
 	<a href="#DRINK" class="menu DRINK" on:click="set({filter: 'DRINK'})" title="Show only bars">BARS</a>
+	<a href="#ALL" class="menu current ALL" on:click="set({filter: ''})" title="Show all">ALL</a>  
   </div>
 </div>
 <div class="viewItemsCountCont">Visible items: <span class="viewItemsCount">0</span></div>
@@ -251,6 +251,7 @@
 	clear: both;
     margin: 0 auto;
 	font-weight: bold;
+	font-size: 18px;
 	text-transform: uppercase;
 }
 .header {
@@ -276,6 +277,8 @@
 
 .mode-controls a {
     color: black;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 /*
 .mode-controls a.current:after {

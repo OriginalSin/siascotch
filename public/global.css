@@ -86,6 +86,10 @@ body.show_sidebar .push_sidebar {
 .icon.DRINK:after, .sia-icon.DRINK:after {
     border-color: #ffc512 transparent transparent transparent;
 }
+@font-face{font-family:'TradeGothicLTStdBoldCondensed';src:url('./font/tradegothicltstd-bdcn20-v2-webfont.eot');src:url('./font/tradegothicltstd-bdcn20-v2-webfont.eot?#iefix') format('embedded-opentype'),
+url('./font/tradegothicltstd-bdcn20-v2-webfont.woff') format('woff'),
+url('./font/tradegothicltstd-bdcn20-v2-webfont.ttf') format('truetype'),
+url('./font/tradegothicltstd-bdcn20-v2-webfont.svg') format('svg');font-weight:normal;font-style:normal;}
 
 /*	for scrollbar	*/
 ::-webkit-scrollbar
