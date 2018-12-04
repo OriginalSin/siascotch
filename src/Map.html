@@ -155,7 +155,7 @@
 			search() {
 				let layers = this.setFilter(),
 					val = document.getElementsByClassName('zipcode')[0].value.trim().toUpperCase();
-				if (val === '') {
+				if (val === '' || layers.length === 0) {
 					L.leafletMap.setView(new L.LatLng(33.17434155100208, -98.0419921875), (L.Browser.mobile ? 3 : 4));
 				} else if (layers.length) {
 					L.leafletMap.fitBounds(this.markers.getBounds());
