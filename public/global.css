@@ -1,4 +1,7 @@
 
+body {
+	margin: 0;
+}
 body.show_sidebar .push_sidebar {
 	left: 114px;
 }
