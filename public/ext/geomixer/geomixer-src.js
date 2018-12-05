@@ -1,7 +1,7 @@
 (function () {
 var define = null;
-var buildDate = '2018-10-27 13:55:27';
-var buildUUID = '5dac6b1561d8412ea251c22cb5a74329';
+var buildDate = '2018-10-25 14:07:08';
+var buildUUID = '0d010e694b2b42398c79c81332f73bae';
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
@@ -21102,7 +21102,7 @@ var gmxVectorTileLoader = {
                 requestParams.sw = L.gmx._sw;
             }
 
-			var promise = new Promise(function(resolve) {
+			var promise = new Promise(function(resolve, reject) {
 				var query = tileSenderPrefix + '&' + Object.keys(requestParams).map(function(name) {
 					return name + '=' + requestParams[name];
 				}).join('&');
@@ -21110,15 +21110,24 @@ var gmxVectorTileLoader = {
 					mode: 'cors',
 					credentials: 'include'
 				})
-					.then(function(response) { return response.text(); })
-					.then(function(txt) {
-						var pref = 'gmxAPI._vectorTileReceiver(';
-						if (txt.substr(0, pref.length) === pref) {
-							txt = txt.replace(pref, '');
-							txt = txt.substr(0, txt.length -1);
+					.then(function(response) {
+						if (response.status === 404) {
+							reject(response);
+							return '';
 						}
-						resolve(JSON.parse(txt));
-					});
+						return response.text();
+					})
+					.then(function(txt) {
+						if (txt) {
+							var pref = 'gmxAPI._vectorTileReceiver(';
+							if (txt.substr(0, pref.length) === pref) {
+								txt = txt.replace(pref, '');
+								txt = txt.substr(0, txt.length -1);
+							}
+							resolve(JSON.parse(txt));
+						}
+					})
+					.catch(console.log);
 			});
             this._loadedTiles[key] = promise;
         }
@@ -22151,8 +22160,8 @@ var DataManager = L.Class.extend({
         gmxVectorTileLoader.load(
             _this.tileSenderPrefix,
             {x: x, y: y, z: z, v: v, s: s, d: d, srs: this.options.srs, layerID: _this.options.name}
-        ).then(callback, function() {
-            console.log('Error loading vector tile');
+        ).then(callback, function(res) {
+            console.log('Error loading vector tile:', res);
             callback({values:[]});
             _this.fire('chkLayerUpdate', {dataProvider: _this}); //TODO: do we really need event here?
         });
@@ -27250,11 +27259,14 @@ L.gmx.VectorLayer.include({
                     }
                     this._map.doubleClickZoom.disable();
                     return idr;
-                } else if (this._map) {
-					this._map.doubleClickZoom.enable();
+                // } else if (this._map) {
+					// this._map.doubleClickZoom.enable();
 				}
             }
         }
+		if (!this._map.doubleClickZoom.enabled()) {
+			this._map.doubleClickZoom.enable();
+		}
         return 0;
     },
 
@@ -30752,8 +30764,8 @@ L.gmx.loadLayer = function(mapID, layerID, options) {
 			function(response) {
 				reject('Can\'t load layer ' + layerID + ' from map ' + mapID + ': ' + response.error);
 			}
-		).catch(console.log);
-	}).catch(console.log);
+		);
+	});
 };
 
 L.gmx.loadLayers = function(layers, globalOptions) {
@@ -34103,6 +34115,9 @@ L.GmxDrawing.Feature = L.LayerGroup.extend({
 					arr = (obj.getLayers ? obj.getLayers()[0] : obj)
 						.getLatLngs()
 						.map(function(it) { return {_latlngs: it.shift(), _holes: it}; });
+				} else if (this.options.type === 'Polygon') {
+					var _latlngs = (obj.getLayers ? obj.getLayers()[0] : obj).getLatLngs();
+					arr = [{_latlngs: _latlngs.shift(), _holes: _latlngs}];
 				}
 			}
             for (var i = 0, len = arr.length; i < len; i++) {
@@ -36718,37 +36733,42 @@ L.DomUtil.TRANSFORM_ORIGIN = L.DomUtil.testProp(
 			attr = attr || {};
 			L.gmx.loadLayers(layersGMX, attr).then(function(arr) {
 				var layerByLayerID = {},
-					sputnik = baseLayers['sputnik'].layers[0],
+					// overlay = null,
 					arr1 = L.version === '0.7.7' ? arguments : arr,
 					i, len;
 
 				for (i = 0, len = arr1.length; i < len; i++) {
-					var layer = arr1[i];
-					if (layer) {
-						var gmx = layer._gmx,
-							mapName = gmx.mapName,
-							layerID = gmx.layerID;
-						if (!(mapName in layerByLayerID)) {
-							layerByLayerID[mapName] = {};
-						}
-						layerByLayerID[mapName][layerID] = layer;
+					var layer = arr1[i],
+						gmx = layer._gmx,
+						mapName = gmx.mapName,
+						layerID = gmx.layerID;
+					if (!(mapName in layerByLayerID)) {
+						layerByLayerID[mapName] = {};
 					}
+					layerByLayerID[mapName][layerID] = layer;
 				}
 				for (i = 0, len = layersGMX.length; i < len; i++) {
 					var info = layersGMX[i],
-						type = info.type,
-						it = layerByLayerID[info.mapID],
-						clayer = it ? it[info.layerID] : sputnik;
-						if (type === 'satellite') {
-							baseLayers.OSMHybrid.layers.unshift(clayer);
-						}
-						baseLayers[type] = {
-							rus: info.rus,
-							eng: info.eng,
-							icon: info.icon,
-							overlayColor: info.overlayColor || '#000000',
-							layers: [clayer]
-						};
+						type = info.type;
+					if (type === 'satellite') {
+						var satellite = layerByLayerID[info.mapID][info.layerID]; // satellite
+						baseLayers.OSMHybrid.layers.unshift(satellite);
+						// if (lang === 'rus') {
+								// baseLayers.OSMHybrid.layers.unshift(satellite);
+						// } else {
+							// overlay = layerByLayerID[info.mapID]['BCCCE2BDC9BF417DACF27BB4D481FAD9']; // eng Overlay
+							// overlay.options.gmxCopyright = getCopyright2();
+							// overlay.options.clickable = false;
+							// baseLayers.OSMHybrid.layers = [satellite, overlay];
+						// }
+					}
+					baseLayers[type] = {
+						rus: info.rus,
+						eng: info.eng,
+						icon: info.icon,
+						overlayColor: info.overlayColor || '#000000',
+						layers: [layerByLayerID[info.mapID][info.layerID]]
+					};
 				}
 				for (var id in baseLayers) {
 					var baseLayer = baseLayers[id];
