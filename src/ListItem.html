@@ -9,7 +9,9 @@
 			<div class="metadata">
 				<div class="address" title="{props.Address}">{@html props.Address} {props.Zipcode}</div>
 				<div class="phone">{props['Phone Number']}</div>
-				<div class="url"><a href="{props.Website}" target="_blank">Buy online now</a></div>
+{#if props.Buy}
+				<div class="url"><a href="{props.Buy}" target="_blank">Buy online now</a></div>
+{/if}
 				
 			</div>
 		</td>
