@@ -129,8 +129,8 @@
 									html = img +
 										'<a href="' + props.Website + '" class="Name" target="none"><strong>' + props.Name + '</strong></a>\
 										<br>' + props.Address + ' ' + props.Zipcode + '\
-										<br>' + props['Phone Number'] + '\
-										<br><a href="' + props.Website + '" target="none">WEBSITE</a>';
+										<br>' + props['Phone Number'];
+if (props.Buy) { html += '<br><a href="' + props.Buy + '" target="none">BUY ONLINE NOW</a>'; }
 								// layer.bindPopup(html); //, {autoClose: false, closeOnClick: false, keepInView: true});
 								layer.on('click', () => {
 									L.popup()
