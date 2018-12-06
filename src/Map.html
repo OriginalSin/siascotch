@@ -88,8 +88,11 @@
 									let it = {id: i + 1};
 									arr.forEach((pt, j) => {
 										let key = json.columns[j];
-										if (key === 'Images') {
-//console.log('ggg', key, it.Images)
+										if (key === 'Lat' || key === 'Lng') {
+											if (typeof(pt) === 'string') {
+												console.warn('Error in fusion table: ' + i + ' row', arr);
+											}
+											pt = Number(pt) || 0;
 										} else if (key === 'Weight') {
 											pt = Number(pt) || 0;
 										} else if (typeof(pt) === 'string' && (key === 'Lng' || key === 'Lat')) {
