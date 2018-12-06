@@ -90,7 +90,7 @@
 										let key = json.columns[j];
 										if (key === 'Lat' || key === 'Lng') {
 											if (typeof(pt) === 'string') {
-												console.warn('Error in fusion table: ' + i + ' row', arr);
+												console.log('Error in fusion table: ' + i + ' row', arr);
 											}
 											pt = Number(pt) || 0;
 										} else if (key === 'Weight') {
