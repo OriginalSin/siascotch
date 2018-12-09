@@ -130,7 +130,7 @@
 										'<a href="' + props.Website + '" class="Name" target="none"><strong>' + props.Name + '</strong></a>\
 										<br>' + props.Address + ' ' + props.Zipcode + '\
 										<br>' + props['Phone Number'];
-if (props.Buy) { html += '<br><a href="' + props.Buy + '" target="none">BUY ONLINE NOW</a>'; }
+								if (props.Buy) { html += '<br><a href="' + props.Buy + '" target="none">BUY ONLINE NOW</a>'; }
 								// layer.bindPopup(html); //, {autoClose: false, closeOnClick: false, keepInView: true});
 								layer.on('click', () => {
 									L.popup()
@@ -284,27 +284,14 @@ if (props.Buy) { html += '<br><a href="' + props.Buy + '" target="none">BUY ONLI
     padding-left: 10px;
     padding-right: 10px;
 }
-/*
-.mode-controls a.current:after {
-    position: absolute;
-    display: block;
-    content: "";
-    border-color: #ed9605 transparent transparent transparent;
-    border-style: solid;
-    border-width: 5px;
-    height: 0;
-    width: 0;
-    position: absolute;
-    bottom: -10px;
-    left: 37%;
-}
-*/
+
 .title input {
     font-size: 13px;
 	padding: 4px;
 }
 .title input.zipcode {
 	width: 200px;
+	font-family: Arial;
 }
 .title .sButton {
     font-family: TradeGothicLTStdBoldCondensed;
@@ -312,11 +299,7 @@ if (props.Buy) { html += '<br><a href="' + props.Buy + '" target="none">BUY ONLI
 	padding: 4px 8px;
     color: black;
     cursor: pointer;
-    /* border: 0; */
-    /* font-weight: bold; */
-    /* text-rendering: optimizeLegibility; */
-    /* text-transform: uppercase; */
-    /* text-align: center; */
+	display: inline-block;
 }
 
 @media only screen and (max-width: 480px) {
